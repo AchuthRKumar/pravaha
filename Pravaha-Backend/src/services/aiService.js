@@ -1,4 +1,4 @@
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenAI, Type } from "@google/genai";
 import config from '../config.js';
 
 const genAI = new GoogleGenAI(config.GEMINI_API_KEY);
@@ -32,7 +32,24 @@ const analyzeNews = async (text) => {
         const result = await genAI.models.generateContent({
             model:"gemini-2.5-flash",
             contents: prompt,
+            config: {
+                responseMimeType: "application/json",
+                response_schema: {
+                    type: Type.ARRAY,
+                    items: {
+                        type: Type.OBJECT,
+                        properties: {
+                            summary: { type: Type.STRING },
+                            sentiment: { type: Type.STRING },
+                            classification: { type: Type.STRING },
+                            reasoning: { type: Type.STRING },
+                        },
+                    },
+                    propertyOrdering: ["summary", "sentiment", "classification", "reasoning"]
+                },
+            },
         }) 
+
         const response = result.text;
         
         if (!response) {
@@ -40,7 +57,8 @@ const analyzeNews = async (text) => {
             return null;
         }
 
-        const analysisText = response.text();
+        const analysisText = response;
+        console.log("this is the response",analysisText);
         const analysisObject = JSON.parse(analysisText);
 
         console.log('✅ Successfully received and parsed analysis from Gemini.');

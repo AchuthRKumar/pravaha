@@ -1,13 +1,12 @@
 // ===================================================
-// Sanket AI - NSE Data Service (Stealth Edition)
+// Pravaha - NSE Data Service (Direct Scrape Edition)
 // ===================================================
 import { chromium } from 'playwright-extra';
 import stealthPlugin from 'puppeteer-extra-plugin-stealth';
 import axios from 'axios';
 import pdf from 'pdf-parse';
 
-// Apply the stealth plugin to Playwright to evade detection
-chromium.use(stealthPlugin());
+chromium.use(stealthPlugin()); // Use stealth to appear more human
 
 const ANNOUNCEMENTS_PAGE_URL = 'https://www.nseindia.com/companies-listing/corporate-filings-announcements';
 
@@ -18,42 +17,55 @@ const BROWSER_HEADERS = {
 const fetchLatestAnnouncements = async () => {
     let browser = null;
     try {
-        console.log('🚀 Launching STEALTH headless browser...');
-        // We now use the stealth-enabled chromium object
+        console.log('🚀 Launching stealth browser for direct scraping...');
         browser = await chromium.launch({ headless: true });
-        const context = await browser.newContext({ userAgent: BROWSER_HEADERS['User-Agent'] });
-        const page = await context.newPage();
-
-        console.log('Navigating to NSE announcements page with stealth...');
+        const page = await browser.newPage();
         
-        const responsePromise = page.waitForResponse(
-            response => response.url().includes('/api/corporate-announcements?index=all') && response.status() === 200,
-            { timeout: 60000 } // Increased timeout to 60 seconds
-        );
+        console.log(`Navigating to ${ANNOUNCEMENTS_PAGE_URL}`);
+        await page.goto(ANNOUNCEMENTS_PAGE_URL, { waitUntil: 'networkidle' });
 
-        await page.goto(ANNOUNCEMENTS_PAGE_URL, { waitUntil: 'networkidle', timeout: 60000 });
-        
-        console.log('Page navigation complete. Waiting for the API response...');
-        const apiResponse = await responsePromise;
-        const jsonResponse = await apiResponse.json();
+        // Wait for the table to ensure it's loaded by JavaScript
+        await page.waitForSelector('#CFanncEquityTable', { timeout: 30000 });
+        console.log('Announcements table is visible.');
 
-        await browser.close();
-        console.log('Stealth browser closed.');
+        const announcements = [];
+        // Loop through the first 20 rows of the table as you suggested
+        for (let i = 1; i <= 20; i++) {
+            try {
+                // Construct the XPath for the current row
+                const rowXpath = `//*[@id="CFanncEquityTable"]/tbody/tr[${i}]`;
 
-        if (jsonResponse && Array.isArray(jsonResponse.data)) {
-            console.log(`✅ Successfully fetched ${jsonResponse.data.length} announcements!`);
-            return jsonResponse.data;
-        } else {
-            console.warn('⚠️ Stealth mode succeeded, but data was not in the expected format.');
-            return [];
+                // Extract data using XPath locators
+                const symbol = await page.locator(`${rowXpath}/td[1]`).textContent();
+                const companyName = await page.locator(`${rowXpath}/td[2]`).textContent();
+                const pdfUrl = await page.locator(`${rowXpath}/td[5]/a`).getAttribute('href');
+                const broadcastTime = await page.locator(`${rowXpath}/td[7]`).textContent();
+                
+                // Map the scraped data to the field names our pollingService expects
+                announcements.push({
+                    sm_symbol_dtl: symbol.trim(),
+                    sm_name: companyName.trim(),
+                    attchmnt_dtl: pdfUrl, // This is our new unique ID
+                    an_dt: broadcastTime.trim().replace(/\s+/g, ' '), // Clean up whitespace
+                });
+            } catch (rowError) {
+                // This will happen if there are fewer than 20 rows, which is fine.
+                console.log(`- Could not find row ${i}, likely end of list.`);
+                break; // Exit the loop
+            }
         }
+        
+        console.log(`✅ Scraped ${announcements.length} announcements from the page.`);
+        return announcements;
 
     } catch (error) {
-        console.error('❌ An error occurred during the stealth Playwright fetch:', error.message);
-        if (browser && browser.isConnected()) {
-            await browser.close();
-        }
+        console.error('❌ An error occurred during the Playwright scraping process:', error.message);
         return [];
+    } finally {
+        if (browser) {
+            await browser.close();
+            console.log('Browser closed.');
+        }
     }
 };
 
@@ -66,6 +78,7 @@ const extractTextFromPdf = async (pdfUrl) => {
         const data = await pdf(response.data);
         return data.text;
     } catch (error) {
+        console.error(`❌ Error extracting text from PDF ${pdfUrl}:`, error.message);
         return null; 
     }
 };
