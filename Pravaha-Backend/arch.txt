@@ -1,0 +1,6 @@
+The Complete Data Flow
+This architecture creates two clean, independent data flows:
+Flow 1: Real-time Analysis (The "Push")
+node-cron -> NSE API -> Check DB -> PDF Parser -> Gemini AI -> Save to DB -> Socket.io Emit -> React UI updates
+Flow 2: Initial Page Load (The "Pull")
+React App Loads -> HTTP GET /api/analyses/latest -> Express Server -> Query DB -> Return JSON -> React UI displays initial list
