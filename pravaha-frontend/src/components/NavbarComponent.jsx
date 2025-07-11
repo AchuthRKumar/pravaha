@@ -119,12 +119,12 @@ const NavbarComponent = () => {
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                 {/* Placeholder for a simple logo if needed */}
                 {/* <div style={{ width: '28px', height: '28px', backgroundColor: '#53d22c' }}></div> */}
-                <a href="/" className="m-0 !text-3xl !font-bold">Pravaha</a>
+                <a href="/" className="m-0 text-3xl !font-bold">Pravaha</a>
             </div>
 
             <nav style={{ display: 'flex', gap: '20px' }}>
                 {navigation.map((n) => (
-                    <div className="hover:underline">
+                    <div className="hover:scale-125">
                         <a href={n.href}>{n.name}</a>
                     </div>
                 ))}
@@ -142,9 +142,9 @@ const NavbarComponent = () => {
                         onFocus={handleInputFocus}
                         onBlur={handleInputBlur}
                         placeholder="Search companies"
-                        className="bg-transparent border-none outline-none text-white text-sm w-[150px] placeholder:text-gray-400"
+                        className="bg-transparent border-none outline-none text-white !text-sm w-[150px] placeholder:text-gray-400"
                     />
-                    <span className="bg-black/20 rounded p-1 text-xs text-white">Ctrl+K</span>
+                    <span className="bg-black/20 rounded p-1 !text-xs text-white">Ctrl+K</span>
                 </div>
 
                 {/* Suggestions Dropdown */}

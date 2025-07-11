@@ -8,15 +8,14 @@ import AnnouncementFeedPage from './pages/AnnouncementFeedPage.jsx';
 
 function App() {
   return (
-    <Router> {/* Wrap your entire app with Router */}
-      <div className="min-h-screen flex flex-col relative z-10 bg-transparent">
+    <Router> 
+      <div className="min-h-screen flex flex-col relative z-10 ">
         <Navbar />
 
-        <main className="flex-grow py-6 px-4 md:px-10 lg:px-20 xl:px-40  mx-auto w-full">
-          <Routes> {/* Define your routes here */}
-            <Route path="/" element={<HeroSection />} /> {/* Root path shows Hero Section */}
-            <Route path="/feed" element={<AnnouncementFeedPage />} /> {/* /feed path shows Announcements Feed */}
-            {/* Add more routes here as your app grows (e.g., /watchlist, /portfolio) */}
+        <main className='flex-grow py-6 px-4 md:px-10 lg:px-20 xl:px-40 mx-auto w-full'>
+          <Routes> 
+            <Route path="/" element={<HeroSection />} />
+            <Route path="/feed" element={<AnnouncementFeedPage />} /> 
           </Routes>
         </main>
 

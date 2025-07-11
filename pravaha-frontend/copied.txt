@@ -1,0 +1,64 @@
+Section Structure:
+The "MarketWise Insight" Banner (Top Text/Quote)
+Market Overview (Key Indices & Top Movers)
+Spotlight Announcements (Curated Latest News)
+1. The "MarketWise Insight" Banner
+Purpose: A powerful, inviting, and value-defining statement.
+Content:
+Headline/Quote:
+Static (Simple Start): "Navigate the Markets with Precision. Your Edge, Unveiled."
+Dynamic (Interesting & Future): "MarketWise: Today's Insight" + (A short, compelling sentence summarizing overall market sentiment or a key theme. e.g., "Positive global cues are driving early gains across IT and Pharma sectors.")
+(Advanced: If user is logged in) "Welcome back, [User Name]. Your Watchlist is up +X% today."
+Sub-text (Optional): A brief, impactful tagline: "Cutting through the noise, delivering clarity."
+Data Source:
+Static: Hardcoded in frontend.
+Dynamic: Requires a new backend endpoint (e.g., /api/market-insight-summary) that uses LLM to analyze aggregated news sentiment or broader market data (future feature).
+Design Notes: Prominent, center-aligned text. Uses your selected font-thin for elegance. Could have a subtle background gradient or animation (if using react-three/fiber effectively for the background).
+2. Market Overview
+Purpose: Provide an immediate glance at the broader market's performance.
+Content:
+Major Indices (Nifty 50, Sensex):
+Index Name (e.g., "Nifty 50", "SENSEX")
+Current Value
+Absolute Change (e.g., "+120.50")
+Percentage Change (e.g., "+0.65%")
+Visual Trend (Suggestion for Interest): A small sparkline chart showing intraday movement, or last 1-day/5-day trend.
+Top 3 Gainers / Top 3 Losers (Suggestion for Interest):
+Company Name (Symbol)
+Last Price
+Percentage Change (e.g., "+4.5%")
+Actionable Link: Clickable to view company-specific announcements/details.
+Market Breadth (Suggestion for Interest):
+Number of advancing stocks vs. declining stocks (e.g., "1200 Advancing / 700 Declining"). This adds depth.
+Data Source:
+Requires a new backend service: nseMarketDataService.js (similar to nseLiveQuoteService.js, but for index/market snapshot data).
+New backend API endpoint: /api/market-overview.
+Frontend fetches this data once on load.
+Design Notes: Clean, tabular or card-based layout. Green for gains, red for losses. Emphasize numbers. Visually separated from the banner and announcements below. Could have a small loading spinner while fetching.
+3. Spotlight Announcements
+Purpose: Highlight the most recent and/or impactful corporate news from your analysis engine.
+Content:
+Curated List: The top 3-5 most recently processed announcements from your Analysis collection.
+For each announcement:
+Company Name (Symbol)
+Time of Announcement
+Your AI's Classification (e.g., "Potential Upside", "Neutral", "Potential Downside") with the colored tag.
+Your AI's Summary (1-2 sentences).
+"Why it Matters" (Suggestion for Interest): A very concise, AI-generated sentence (perhaps from a slightly refined prompt) that explains the immediate market relevance based on the company context.
+Example: "TechCorp (TCORP): New product launch expected to boost market share. This is a key growth driver for this mid-cap tech firm."
+Example: "AutoDrive (ADRV): Faces recall over safety concerns. Could lead to immediate operational cost increases and reputational damage."
+Call to Action: A "View Full Announcement" button/link that takes the user to the detailed view (or directly to the PDF/external link, depending on your UI plan).
+Data Source:
+Your existing Analysis collection, retrieved via /api/announcements with a limit of 3-5, or a new curated-announcements endpoint if you add more complex filtering logic.
+The "Why it Matters" part could be an additional field returned by your AI's analyzeNews function, or a separate lightweight LLM call on the frontend for extreme brevity.
+Design Notes: Cards, similar to your existing announcement cards, but perhaps slightly more compact. Prominent classification tags. A clear "See All Announcements" button at the bottom of this section.
+Overall Data Flow for Hero Section (Summary):
+Frontend App.jsx (useEffect on mount):
+Make an axios.get request to /api/market-overview (new backend endpoint).
+Make an axios.get request to /api/announcements?limit=5 (existing endpoint).
+(Optional/Future) Make an axios.get request to /api/market-insight-summary (new backend LLM-driven endpoint).
+Backend (New Services/Routes):
+nseMarketDataService.js: Scrapes/fetches from NSE for Nifty/Sensex, Gainers/Losers.
+marketOverviewRoutes.js: Exposes /api/market-overview.
+(Optional) marketInsightService.js: Uses LLM on aggregated Analysis data or macro news to generate insight summary.
+(Optional) marketInsightRoutes.js: Exposes /api/market-insight-summary.

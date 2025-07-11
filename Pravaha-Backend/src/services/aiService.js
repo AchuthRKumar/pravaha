@@ -61,7 +61,7 @@ const analyzeNews = async (text, companyDetails) => {
     try {
         console.log('Sending text to Gemini for analysis...');
         const result = await genAI.models.generateContent({
-            model: "gemini-2.5-flash",
+            model: "gemini-2.0-flash-lite",
             contents: prompt,
             config: {
                 responseMimeType: "application/json",

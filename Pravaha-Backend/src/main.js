@@ -9,8 +9,8 @@ import nseCompanySyncService from './services/nseCompanySyncService.js';
 const startApp = async () => {
     try {
         await connectDB();
-        // startPolling();
-        console.log('🕒 Scheduling daily BSE company data sync...');
+        startPolling();
+        console.log('🕒 Scheduling daily BSE company data sync...');   
         cron.schedule('0 1 * * *', bseCompanySyncService.syncBSECompaniesToDB, {
             scheduled: true,
             timezone: "Asia/Kolkata"
