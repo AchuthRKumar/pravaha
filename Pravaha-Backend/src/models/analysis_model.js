@@ -1,17 +1,10 @@
-// ===================================================
-// Pravaha - Analysis Data Model (Final Version)
-// ===================================================
 import mongoose from "mongoose";
 
 const analysisSchema = new mongoose.Schema(
     {
-        // --- THIS IS THE FIX ---
-        // We are removing the 'unique' and 'index' constraints from nse_id,
-        // as we are no longer using it as a primary key. It can now be empty or null
-        // without causing database errors.
         nse_id: {
             type: String,
-            required: false, // It's no longer required
+            required: false, 
         },
         symbol: {
             type: String,
@@ -43,7 +36,6 @@ const analysisSchema = new mongoose.Schema(
         reasoning: {
             type: String,
         },
-        // This is now our true unique key, as we defined earlier.
         source_pdf_url: {
             type: String,
             required: true,

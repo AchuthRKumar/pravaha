@@ -1,12 +1,9 @@
-// ===================================================
-// Pravaha - NSE Data Service (Direct Scrape Edition)
-// ===================================================
 import { chromium } from 'playwright-extra';
 import stealthPlugin from 'puppeteer-extra-plugin-stealth';
 import axios from 'axios';
 import pdf from 'pdf-parse';
 
-chromium.use(stealthPlugin()); // Use stealth to appear more human
+chromium.use(stealthPlugin()); 
 
 const ANNOUNCEMENTS_PAGE_URL = 'https://www.nseindia.com/companies-listing/corporate-filings-announcements';
 
@@ -24,34 +21,28 @@ const fetchLatestAnnouncements = async () => {
         console.log(`Navigating to ${ANNOUNCEMENTS_PAGE_URL}`);
         await page.goto(ANNOUNCEMENTS_PAGE_URL, { waitUntil: 'networkidle' });
 
-        // Wait for the table to ensure it's loaded by JavaScript
         await page.waitForSelector('#CFanncEquityTable', { timeout: 30000 });
         console.log('Announcements table is visible.');
 
         const announcements = [];
-        // Loop through the first 20 rows of the table as you suggested
         for (let i = 1; i <= 20; i++) {
             try {
-                // Construct the XPath for the current row
                 const rowXpath = `//*[@id="CFanncEquityTable"]/tbody/tr[${i}]`;
 
-                // Extract data using XPath locators
                 const symbol = await page.locator(`${rowXpath}/td[1]`).textContent();
                 const companyName = await page.locator(`${rowXpath}/td[2]`).textContent();
                 const pdfUrl = await page.locator(`${rowXpath}/td[5]/a`).getAttribute('href');
                 const broadcastTime = await page.locator(`${rowXpath}/td[7]`).textContent();
                 
-                // Map the scraped data to the field names our pollingService expects
                 announcements.push({
                     sm_symbol_dtl: symbol.trim(),
                     sm_name: companyName.trim(),
-                    attchmnt_dtl: pdfUrl, // This is our new unique ID
-                    an_dt: broadcastTime.trim().replace(/\s+/g, ' '), // Clean up whitespace
+                    attchmnt_dtl: pdfUrl, 
+                    an_dt: broadcastTime.trim().replace(/\s+/g, ' '), 
                 });
             } catch (rowError) {
-                // This will happen if there are fewer than 20 rows, which is fine.
                 console.log(`- Could not find row ${i}, likely end of list.`);
-                break; // Exit the loop
+                break; 
             }
         }
         
