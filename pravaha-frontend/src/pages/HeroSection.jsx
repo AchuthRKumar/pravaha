@@ -8,8 +8,8 @@ const HeroSection = () => {
                 text="Navigate the Markets with Precision."
                 className="!text-4xl md:!text-6xl !font-extrabold text-center mb-2 leading-tight"
                 delay={100}
-                duration={0.6}
-                ease="power3.out"
+                duration={1}
+                ease="elastic.out(0.3, 0.3)"
                 splitType="words"
                 from={{ opacity: 0, y: 40 }}
                 to={{ opacity: 1, y: 0 }}

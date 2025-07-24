@@ -1,5 +1,4 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
-import { Input, InputGroup, Kbd } from "@chakra-ui/react"
 import { CiSearch } from "react-icons/ci";
 import axios from 'axios';
 import {
@@ -124,7 +123,7 @@ const NavbarComponent = () => {
 
             <nav style={{ display: 'flex', gap: '20px' }}>
                 {navigation.map((n) => (
-                    <div className="hover:scale-125">
+                    <div key={n.name} className="hover:scale-125">
                         <a href={n.href}>{n.name}</a>
                     </div>
                 ))}

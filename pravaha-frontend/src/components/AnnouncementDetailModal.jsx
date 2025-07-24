@@ -20,7 +20,7 @@ const AnnouncementDetailModal = ({ announcement, onClose }) => {
           onClick={onClose}
           className="absolute top-4 right-4 !p-2 rounded-full bg-gray-700/50 hover:bg-gray-600/70 text-gray-300 hover:text-white transition-colors"
           aria-label="Close"
-        >/
+        >
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
         </button>
 
@@ -59,7 +59,7 @@ const AnnouncementDetailModal = ({ announcement, onClose }) => {
             </div>
 
             <span className="text-xs font-bold text-gray-400 ml-auto">
-              {announcement.formattedTime}
+              {formatAnnouncementTime(  announcement.announcement_time)}
             </span>
         </div>
 

@@ -5,10 +5,7 @@ const router = express.Router();
 
 router.post('/webhook', async (req, res) => {
     console.log('--- Incoming Telegram Webhook Request ---'); // NEW: Clear separator
-    console.log('Request Headers:', req.headers['content-type']); // NEW: Check content-type
-    console.log('Raw Request Body (if available via bodyParser, before JSON parse attempt):', req.rawBody); // NEW: If you later add rawBody parser
-    console.log('Parsed Request Body:', JSON.stringify(req.body, null, 2)); // NEW: Crucial check for parsed body
-
+    
     try {
         const update = req.body;
 

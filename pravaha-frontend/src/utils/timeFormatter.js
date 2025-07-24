@@ -29,13 +29,12 @@ export const formatAnnouncementTime = (timeString) => {
     return timeString; // Fallback to original string if no match
 };
 
-// Also add a helper to format the current date/time to show "Today" or "Yesterday"
 export const getRelativeDate = (dateTimeString) => {
     if (!dateTimeString) return 'N/A';
-    const date = new Date(dateTimeString.split(' ')[0].replace(/-/g, ' ')); // Use only the date part for comparison
+    const date = new Date(dateTimeString.split(' ')[0].replace(/-/g, ' ')); 
 
     const today = new Date();
-    today.setHours(0, 0, 0, 0); // Normalize to start of day
+    today.setHours(0, 0, 0, 0); 
 
     const yesterday = new Date(today);
     yesterday.setDate(today.getDate() - 1);
@@ -46,5 +45,36 @@ export const getRelativeDate = (dateTimeString) => {
         return 'Yesterday';
     } else {
         return date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+    }
+};
+
+export const getGroupDateHeader = (rawTimeString) => {
+    const match = rawTimeString.match(/(\d{2}-[A-Za-z]{3}-\d{4} \d{2}:\d{2}:\d{2})/);
+    if (!match || !match[1]) {
+        return 'Unknown Date';
+    }
+    const date = new Date(match[1]);
+    if (isNaN(date.getTime())) {
+        return 'Invalid Date';
+    }
+
+    const today = new Date();
+    const yesterday = new Date();
+    yesterday.setDate(today.getDate() - 1); // Set yesterday's date
+
+    // Normalize dates to remove time component for accurate comparison
+    const normalizeDate = (d) => new Date(d.getFullYear(), d.getMonth(), d.getDate());
+
+    const normalizedDate = normalizeDate(date);
+    const normalizedToday = normalizeDate(today);
+    const normalizedYesterday = normalizeDate(yesterday);
+
+    if (normalizedDate.getTime() === normalizedToday.getTime()) {
+        return 'Today';
+    } else if (normalizedDate.getTime() === normalizedYesterday.getTime()) {
+        return 'Yesterday';
+    } else {
+        // For other dates, format as "Month Day, Year"
+        return date.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
     }
 };
