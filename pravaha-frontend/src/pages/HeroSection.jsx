@@ -3,7 +3,7 @@ import SplitText from "../components/SplitText.jsx"
 
 const HeroSection = () => {
     return (
-        <div className="flex flex-col items-center justify-center min-h-[50vh] w-full text-center pb-12">
+        <div className="flex flex-col flex-1 items-center justify-center min-h-[50vh] w-full text-center pb-12">
             <SplitText
                 text="Navigate the Markets with Precision."
                 className="!text-4xl md:!text-6xl !font-extrabold text-center mb-2 leading-tight"
@@ -30,7 +30,7 @@ const HeroSection = () => {
                 rootMargin="-100px"
                 textAlign="center"
             />
-            <div className="mt-2 text-lg md:text-2xl text-gray-300 font-medium italic">
+            <div className="mt-2 text-lg md:text-2xl text-gray-300 font-medium italic px-4">
                 Cutting through the noise, delivering clarity.
             </div>
         </div>

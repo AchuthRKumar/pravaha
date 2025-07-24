@@ -170,7 +170,7 @@ const AnnouncementsFeedPage = () => {
 
 
   return (
-    <div className="flex flex-col items-center w-full">
+    <div className="flex flex-col items-center w-full px-2 sm:px-4 md:px-0">
       <h2 className="text-3xl font-bold text-white mb-4">Live Announcements Feed</h2>
 
       {loading ? (
@@ -179,7 +179,7 @@ const AnnouncementsFeedPage = () => {
         <p className="text-gray-400">No announcements found. New ones will appear here as soon as they are processed.</p>
       ) : (
         <>
-          <div className="flex flex-col gap-6 w-full max-w-5xl mx-auto px-4">
+          <div className="flex flex-col gap-6 w-full max-w-5xl mx-auto px-0 sm:px-4">
             {/* Iterate over groupedAnnouncements now */}
             {groupedAnnouncements.map((item) => {
               if (item.type === 'header') {
@@ -195,7 +195,7 @@ const AnnouncementsFeedPage = () => {
                     className="w-full p-4 md:p-6 rounded-lg shadow-xl bg-gradient-to-r from-gray-900/80 to-gray-800/80 border border-white/5 backdrop-blur-md cursor-pointer hover:shadow-blue-900/50 hover:border-blue-400/20 transition-all duration-200"
                   >
                     {/* --- HEADER ROW --- */}
-                    <div className="flex items-start justify-between gap-4 mb-2">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-4 mb-2">
                       {/* Classification Tag & Company Name/Symbol */}
                       <div className="flex flex-col items-start gap-1">
                         <span className={`inline-flex items-center gap-1 !px-2 !py-0.5 rounded-full text-xs font-semibold

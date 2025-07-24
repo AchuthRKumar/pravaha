@@ -56,7 +56,7 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-[calc(100vh-180px)] px-4">
+    <div className="flex items-center justify-center min-h-screen py-8 px-4 flex-grow">
       <div className="w-full max-w-md p-8 space-y-6 bg-gray-900 rounded-lg shadow-xl border border-gray-700/50">
         <h2 className="text-3xl font-bold text-white text-center">Login</h2>
         {error && <div className="p-3 text-red-200 bg-red-800 rounded-md text-sm">{error}</div>}
