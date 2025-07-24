@@ -113,12 +113,6 @@ const AnnouncementsFeedPage = () => {
   const openModal = (ann) => setSelectedAnnouncement(ann);
   const closeModal = () => setSelectedAnnouncement(null);
 
-  const statusMessage = loading
-    ? 'Loading announcements...'
-    : error
-      ? error
-      : 'Waiting for new announcements to be processed by the backend...';
-
   // Calculate the range of items being shown on the current page
   const firstItemOnPage = (currentPage - 1) * ITEMS_PER_PAGE + 1;
   const lastItemOnPage = Math.min(currentPage * ITEMS_PER_PAGE, totalItems);
@@ -178,9 +172,6 @@ const AnnouncementsFeedPage = () => {
   return (
     <div className="flex flex-col items-center w-full">
       <h2 className="text-3xl font-bold text-white mb-4">Live Announcements Feed</h2>
-      <p className={`mb-8 ${error ? 'text-red-500' : 'text-gray-300'}`}>
-        {statusMessage}
-      </p>
 
       {loading ? (
         <p className="text-gray-400">Loading announcements from database...</p>

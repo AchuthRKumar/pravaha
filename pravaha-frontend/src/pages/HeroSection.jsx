@@ -7,10 +7,10 @@ const HeroSection = () => {
             <SplitText
                 text="Navigate the Markets with Precision."
                 className="!text-4xl md:!text-6xl !font-extrabold text-center mb-2 leading-tight"
-                delay={100}
-                duration={1}
-                ease="elastic.out(0.3, 0.3)"
-                splitType="words"
+                delay={20}
+                duration={1.5}
+                ease="elastic.out(1, 0.3)"
+                splitType="chars"
                 from={{ opacity: 0, y: 40 }}
                 to={{ opacity: 1, y: 0 }}
                 threshold={0.1}
@@ -21,9 +21,9 @@ const HeroSection = () => {
                 text="Your Edge, Unveiled."
                 className="!text-4xl md:!text-6xl !font-extrabold text-center mb-6 leading-tight"
                 delay={100}
-                duration={0.6}
-                ease="power3.out"
-                splitType="words"
+                duration={1.5}
+                ease="elastic.out(1, 0.3)"
+                splitType="lines"
                 from={{ opacity: 0, y: 40 }}
                 to={{ opacity: 1, y: 0 }}
                 threshold={0.1}

@@ -1,18 +1,8 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { CiSearch } from "react-icons/ci";
 import axios from 'axios';
-import {
-    Navbar,
-    NavBody,
-    NavItems,
-    MobileNav,
-    NavbarLogo,
-    NavbarButton,
-    MobileNavHeader,
-    MobileNavToggle,
-    MobileNavMenu,
-} from "./resizable-navbar"
-
+import { useAuth } from '../context/AuthContext.jsx';
+import { useNavigate } from 'react-router-dom';
 
 const navigation = [
     { name: 'My Feed', href: '/feed' },
@@ -23,12 +13,12 @@ const navigation = [
 const COMPANY_SEARCH_API_URL = 'http://localhost:5000/api/companies/search';
 
 const NavbarComponent = () => {
-
+    const { currentUser, logout } = useAuth(); 
+    const navigate = useNavigate(); 
     const searchInputRef = useRef(null);
     const [searchTerm, setSearchTerm] = useState('');
     const [suggestions, setSuggestions] = useState([]);
     const [showSuggestions, setShowSuggestions] = useState(false);
-    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     const debounce = (func, delay) => {
         let timeout;
@@ -109,6 +99,16 @@ const NavbarComponent = () => {
         };
     }, []);
 
+    const handleLogout = async () => {
+        try {
+            await logout();
+            navigate('/'); // Redirect to home page after logout
+            console.log('User logged out successfully');
+        } catch (error) {
+            console.error('Failed to log out:', error);
+        }
+    };
+
     return (
         <header style={{
             padding: '16px 24px',
@@ -161,11 +161,39 @@ const NavbarComponent = () => {
                     </div>
                 )}
 
-                {/* Avatar */}
-                <div >
-                    <img className="inline-block size-8 rounded-full ring-2 ring-white" src="https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="AK" />
-                </div>
-
+                {/* Conditional rendering for Auth UI */}
+                {currentUser ? (
+                    // User is logged in
+                    <div className="flex items-center gap-3">
+                        <div className="relative group">
+                            <img className="inline-block size-8 rounded-full ring-2 ring-white cursor-pointer"
+                                src={currentUser.photoURL || "https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"}
+                                alt={currentUser.email ? currentUser.email.charAt(0).toUpperCase() : "User"}
+                                title={currentUser.email}
+                            />
+                            {/* Simple dropdown for logout */}
+                            <div className="absolute right-0 mt-2 w-32 bg-gray-800 border border-gray-700 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                                <button
+                                    onClick={handleLogout}
+                                    className="block w-full text-left px-4 py-2 text-sm text-gray-200 hover:bg-gray-700 rounded-md"
+                                >
+                                    Logout
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                ) : (
+                    // User is not logged in
+                    <div className="flex items-center gap-3">
+                        <a href="/login" className="px-4 py-2 rounded-md bg-blue-600 hover:bg-blue-700 transition-colors text-white text-sm font-semibold">
+                            Login
+                        </a>
+                        <a href="/signup" className="px-4 py-2 rounded-md border border-white/20 text-white hover:bg-white/10 transition-colors text-sm font-semibold">
+                            Sign Up
+                        </a>
+                    </div>
+                )}
+                
             </div>
         </header>
     );
